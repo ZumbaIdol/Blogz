@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body bgcolor="#E6E6FA">
+    <h1><center>Add a Blog Entry</center></h1>
+    <form action='/blog' form method='post'>
+        <label>
+            Title for your new blog:</br>
+            <input type="text" name='title' /></br></br>
+        </label></br></br>
+        <label>
+            Your new blog:</br>
+            <textarea name="body" cols="25" rows="5" style="width:15%;height:90px;
+            background-color:LightSalmon;color:Snow;border:none;padding:2%;font:
+            12px/16px sans-serif;"></textarea></br></br>
+        </label></br></br>
+        <input type="submit" value='Add Entry' />
+    </form>
+</body>
+   
+    
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body bgcolor="#E6E6FA">
+<h1><center>Main Blog Page</center></h1>
+<form action='/' form method='post', value='Blog'>
+ 
+    <hr />
+    
+    {% if blogs|length == 0 %} 
+    <p>No blogs yet</p> 
+    {% else %}
+
+    <ul>
+        {% for blog in blogs %}
+            <h2>
+                <left>
+                    <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
+                </left>
+            </h2>
+            <p>{{blog.body}}</p>
+             
+        
+        {% endfor %}
+    </ul>
+
+{% endif %}
+
+        <hr />
+          
+        
+{% endblock %}            
+        
+            
+
+
+    
+              
+    
+    
+
+
+
+
+
+
+
+
+
+
