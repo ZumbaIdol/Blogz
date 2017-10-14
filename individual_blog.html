@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<body bgcolor="#E6E6FA">
+    <h2><center>{{blog.title}}</center></h2>
+    <p><center>{{blog.body}}</center></p>
+    <form action='/blog' form method='post', value='Blog'>
 
-<h3><left>{{blog.title}}</left></h3>
-<p>{{blog.body}}</p>
+
 
 
 {% endblock %}
