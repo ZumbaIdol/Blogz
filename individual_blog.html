@@ -2,6 +2,8 @@
 
 {% block content %}
 <body bgcolor="#E6E6FA">
+
+        {% for blog in blogs %}
     <h2>
         <center>
     <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
@@ -9,4 +11,5 @@
     <form action='/blog' form method='post', value='Blog'>
         </center>
     </h2>
+        {% endfor %}
 {% endblock %}
