@@ -2,11 +2,11 @@
 
 {% block content %}
 <body bgcolor="#E6E6FA">
-    <h2><center>{{blog.title}}</center></h2>
-    <p><center>{{blog.body}}</center></p>
+    <h2>
+        <center>
+    <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
+    <p>{{blog.body}}</p>
     <form action='/blog' form method='post', value='Blog'>
-
-
-
-
+        </center>
+    </h2>
 {% endblock %}
