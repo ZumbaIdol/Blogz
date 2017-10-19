@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+<title>{{Signup}}</title>
+
+{% block content %}
+<body bgcolor="#E6E6FA">
+
+<style>
+    .error { color: red;
+     }
+</style>
+
+<h1>Signup for Blogz</h1>
+ <form method='POST' action='/signup_form' method="post">
+ 
+     <label>Username
+            <input name="username" type="text" value='' />
+            <span class="error">{{username_error}}</span>
+        </label></br></br>
+        <label>Password
+                <input name="password" type="password" value='' />
+                <span class="error">{{password_error}}</span>
+            </label></br></br>
+            <label>Confirm 
+                    <input name="confirm_password"  type="password" value='' />
+                    <span class="error">{{confirm_password_error}}</span>
+                </label></br></br>
+                <input type="submit" value="Create Account" /></br>
+            </form>       
+            
+    {% endblock %}
+    
+    
