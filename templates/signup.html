@@ -1,17 +1,15 @@
 {% extends "base.html" %}
-
-<title>{{Signup}}</title>
-
 {% block content %}
+
 <body bgcolor="#E6E6FA">
 
 <style>
     .error { color: red;
-     }
+    }
 </style>
 
 <h1>Signup for Blogz</h1>
- <form method='POST' action='/signup_form' method="post">
+ <form action='/signup' method='post'>
  
      <label>Username
             <input name="username" type="text" value='' />
@@ -27,7 +25,8 @@
                 </label></br></br>
                 <input type="submit" value="Create Account" /></br>
             </form>       
+
             
-    {% endblock %}
+{% endblock %}
     
     

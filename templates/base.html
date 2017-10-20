@@ -2,22 +2,21 @@
 <html>
 
 <head>
-    <title>{{title}}</title>
-    <style>
-        .error {
-            color: red;
-        }    
-    </style>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="author" content="David Foote">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">             
 </head>
+
+<title>{{title}}</title>
+<style>
+    .error {
+        color: red;
+    }    
+
+</style>         
+    
 <body>
-
-
-    <title>{{title}}</title>
-    <style>
-        .error {
-            color: red;
-        }    
-    </style>
 
 <div>
     <a href='/'>Main Blog Page</a>
@@ -25,11 +24,14 @@
     <a href='/logout'>Log Out</a>
 </div>
 
+
 {% with messages = get_flashed_messages(with_categories=True) %}
     <ul>
     {% for category, message in messages %}
         <li class="{{category}}">{{message}}</li>
-    {% endfor %}
+
+    {% endfor %} 
+
     </ul>
 {% endwith %}
 
