@@ -5,20 +5,22 @@
 <form action='/blog' form method='post' value='Blog'>
     <hr>
     
-        
-        
-            <center>
+     {% if posts|length ==0 %}   
+     <p>No posts yet</p>
 
+     {% else %}
+
+     {%for posts in posts %}
+            <center>
                 <h2><a href="/owner?id={{owner_id.id}}">{{owner_id.title}}</a></h2>
                     <p>{{owner_id.body}}</p>
-                    
-            </center>
-    
+                </center>
+     
+     {% endif %}
+     {% endfor %}
+
 </form>
         
-    
-        
-
     </hr>
 
 {% endblock %}

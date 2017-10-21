@@ -11,6 +11,30 @@
 <h1>Signup for Blogz</h1>
  <form action='/signup' method='post'>
  
+    <hr />
+    
+    {% if users|length == 0 %} 
+    <p>No users yet</p> 
+    {% else %}
+
+    <ul>
+        {% for user in users %}
+            <h2>
+                <left>
+                    <a href="/blog?user={{user.id}}">{{blog.title}}</a>
+                </left>
+            </h2>
+            <p>{{blog.body}}</p>
+             
+        
+        {% endfor %}
+    </ul>
+
+{% endif %}
+
+        <hr />
+
+
      <label>Username
             <input name="username" type="text" value='' />
             <span class="error">{{username_error}}</span>
@@ -20,8 +44,8 @@
                 <span class="error">{{password_error}}</span>
             </label></br></br>
             <label>Confirm 
-                    <input name="confirm_password"  type="password" value='' />
-                    <span class="error">{{confirm_password_error}}</span>
+                    <input name="confirm"  type="password" value='' />
+                    <span class="error">{{confirm_error}}</span>
                 </label></br></br>
                 <input type="submit" value="Create Account" /></br>
             </form>       

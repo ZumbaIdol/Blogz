@@ -34,10 +34,18 @@ class User(db.Model):
          
 @app.route('/')
 def index():
+    owner = User.query.filter_by(username=session['user'])
     encoded_error = request.args.get('error')
     author_username = request.args.get('owner_id')
     if author_username == None:
         blogs = Blog.query.all()
+        if request.method == 'POST':
+            blog_name = request.form['blog']
+        new_blog = Blog(blog_name, owner)
+        db.session.add(new_blog)
+        db.session.commit()
+        blogs = Blog.query.filter_by(completed=False, owner=owner).all()
+        completed_blogs = Blog.query.filter_by(completed=True, owner=owner).all()
         return render_template("blog.html", blogs=blogs)
     else:
         individual_blog = Blog.query.get(id)
@@ -88,6 +96,7 @@ def individual_blog():
         add_entry = Blog(new_blog)
         db.session.add(add_entry)
         db.session.commit()
+        flash('Welcome, ' + username)
         return redirect('/blog?id=' + blog.id)
     else:
         return render_template('new_post.html')
@@ -96,7 +105,7 @@ def individual_blog():
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'signup', 'index', 'blog']
-    if request.endpoint not in allowed_routes and 'user' not in session:
+    if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
@@ -112,7 +121,7 @@ def login():
         user = users.first()
         if password == user.password:
             session['user'] = user.username
-            flash('Welcome back, ' + user.username)
+            
             return redirect('/')
     else:    
         flash('Incorrect username or password')
@@ -127,29 +136,40 @@ def signup():
         confirm = request.form['confirm']
         username_error = ''
         password_error = ''
-        confirm_password_error = ''
+        confirm_error = ''
         if username == "" or len(username) < 3 or len(username) > 20:
            username_error = 'Value out of range (3-20)' 
-        if password == "" or len(password) < 3 or len(password) > 20:
-            password_error = 'Value out of range (3-20)'
-            password = ''
-        if confirm_password == "" or len(confirm_password) < 3 or len(confirm_password) > 20:
-            confirm_password_error = 'Passwords must match'
-            confirm_password = ''
-            username_db_count = User.query.filter_by(username=username).count()
+           return redirect('signup')
+        username_db_count = User.query.filter_by(username=username).count()
         if username_db_count > 0:
             flash('Shazpatz! ' + username +  ' is already a registered user')
             return redirect('/signup')
+        if username and User.query.filter_by(username=username).first():
+            flash('Shazpatz! ' + username +  ' is already a registered user')
+            return redirect('/signup')
+        if password == "" or len(password) < 3 or len(password) > 20:
+            password_error = 'Value out of range (3-20)'
+            password = ''
+            return redirect('/signup')
+        if confirm == "" or len(confirm) < 3 or len(confirm) > 20:
+            confirm_password_error = 'Passwords must match'
+            confirm = ''
+            return redirect('/signup')
+            username_db_count = User.query.filter_by(username=username).count()
         if password != confirm:
             flash('Passwords must match')
             return redirect('/signup')
-            user = User(username=username, password=password)
-            db.session.add(user)
+        if username_error == "" and password_error == "" and confirm_error == "":
+            return render_template('new_post.html')
+            existing_user = User.query.filter_by(username=username)
+        if not existing_user:
+            new_user = User(username, password)
+            db.session.add(new_user)
             db.session.commit()
             session['user'] = user.username
             return redirect('/new_post')
-    else:
-        return render_template('signup.html')
+        else:
+            return render_template('signup.html')
                
 
 @app.route('/singleUser', methods=['GET'])
@@ -163,7 +183,7 @@ def singleUser():
 
 @app.route('/logout', methods=['GET'])
 def logout():
-    del session['username']
+    del session['user']
     return redirect('/')
    
 
