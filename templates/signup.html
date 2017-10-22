@@ -8,6 +8,7 @@
     }
 </style>
 
+<center>
 <h1>Signup for Blogz</h1>
  <form action='/signup' method='post'>
  
@@ -36,20 +37,20 @@
 
 
      <label>Username
-            <input name="username" type="text" value='' />
+        <input name="username" type="text" id="player" value="" style="width:500px; height:30px;" />
             <span class="error">{{username_error}}</span>
         </label></br></br>
         <label>Password
-                <input name="password" type="password" value='' />
+            <input name="password" type="password" id="player" value='' style="width:500px; height:30px;" />
                 <span class="error">{{password_error}}</span>
             </label></br></br>
             <label>Confirm 
-                    <input name="confirm"  type="password" value='' />
+                <input name="confirm"  type="password" id="player" value='' style="width:500px; height:30px;" />
                     <span class="error">{{confirm_error}}</span>
                 </label></br></br>
-                <input type="submit" value="Create Account" /></br>
+                <input type="submit" value="Create Account" style="width:150px;" "height:25px;" /></br>
             </form>       
-
+</center>
             
 {% endblock %}
     

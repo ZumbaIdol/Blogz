@@ -97,20 +97,19 @@ def logout():
 
          
 @app.route('/', methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
+def index(): 
+
+    owner = User.query.filter_by(username=session['username']).first()
+    
+    if request.method == 'POST': 
         blog_name = request.form['blog']
-        owner = User.query.filter_by(username=session['username']).first()
+        
         new_blog = Blog(blog_name, owner)
         db.session.add(new_blog)
         db.session.commit()
-        blogs = Blog.query.filter_by(completed=False, owner=owner).all()
-        completed_blogs = Blog.query.filter_by(completed=True, owner=owner).all()
-        return render_template("blog.html", blogs=blogs)
-    elif request.method == 'GET':
-        individual_blog = Blog.query.filter_by(id=1).first()
-        return render_template('individual_blog.html', title="Build a Blog", individual_blog=individual_blog)
 
+    blogs = Blog.query.filter_by(owner=owner).all()
+    return render_template("blog.html", title="Blogz", blogs=blogs)
     #endpoints_without_login = ['login', 'signup']
 
 

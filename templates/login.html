@@ -10,23 +10,29 @@
 </style>
 
  <form action='/login' method='post'>
+
+    <center>
     <h1>Login to Blogz</h1>
-    <p>If you don't have an account, you may <a href="/signup">Signup</a> for one</p>
+    
     <form action="/login" method="post">
+     
         
      <label>Username
-            <input name="username" type="text" value='' />
+            <input name="username" type="text" id="player" value="" style="width:500px; height:30px;" />
             <span class="error">{{username_error}}</span>
         </label></br></br>
         <label>Password
-                <input name="password" type="password" value='' />
+                <input name="password" type="password" id="player" value='' style="width:500px; height:30px;" />
                 <span class="error">{{password_error}}</span>
             </label></br></br>
             <label>Confirm 
-                    <input name="confirm_password"  type="password" value='' />
+                    <input name="confirm"  type="password" id="player" value='' style="width:500px; height:30px;" />
                     <span class="error">{{confirm_password_error}}</span>
                 </label></br></br>
-                <input type="submit" value="Login" /></br>
+                <input type="submit" value="Login" style="width:75px;" "height:25px;" /></br>
+                <p>If you don't have an account, you may <a href="/signup">Signup</a> for one</p>
+        </center>
             </form>       
 
     {% endblock %}
+    </center>
