@@ -98,27 +98,29 @@ def logout():
          
 @app.route('/', methods=['POST', 'GET'])
 def index(): 
-
-    owner = User.query.filter_by(username=session['username']).first()
-    
+    owner = User.query.filter_by(username=session['username']).all()
     if request.method == 'POST': 
         blog_name = request.form['blog']
-        
         new_blog = Blog(blog_name, owner)
         db.session.add(new_blog)
         db.session.commit()
+        blogs = Blog.query.filter_by(owner=owner).all()
+        new_blogs = Blog.query.filter_by(new=True, owner=owner)
 
-    blogs = Blog.query.filter_by(owner=owner).all()
-    return render_template("blog.html", title="Blogz", blogs=blogs)
-    #endpoints_without_login = ['login', 'signup']
+    return render_template("blog.html")
+    
 
 
 @app.route('/blog', methods=['GET'])
 def new_blog():
+    page_title = 'New Posts'
     id = request.args.get('id')
     if id == None:
         blogs = Blog.query.all()
         return render_template("blog.html", blogs=blogs)
+    single_user = request.args.get('username')
+    if single_user == 'username':
+        return render_template('singleUser.html', title="Add a New Entry", singleUser=singleUser)
     else:
         individual_blog = Blog.query.get(id)
         return render_template('individual_blog.html', title="Build a Blog", individual_blog=individual_blog)
@@ -126,7 +128,7 @@ def new_blog():
     
 @app.route('/blog', methods=['POST', 'GET'])
 def display_blog_form():
-    
+    page_title = 'Blogz'
     blog_title = request.form['title']
     blog_body = request.form['body']  
     blog_title_error = ''
