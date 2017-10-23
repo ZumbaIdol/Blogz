@@ -60,9 +60,6 @@ def signup():
         username = request.form['username']
         password = request.form['password']  
         confirm = request.form['confirm']
-        username_error = ""
-        password_error = ""
-        confirm_error = ""
         if username == "" or len(username) < 3 or len(username) > 20:
             flash('Value out of range (3-20)')
             return redirect('signup')
@@ -74,9 +71,7 @@ def signup():
             return redirect('/signup')
         if confirm != password:
             flash('Passwords must match')
-        if username_error == "" and password_error == "" and confirm_error == "":
-            return render_template('new_post.html')
-            existing_user = User.query.filter_by(username=username).first()
+        existing_user = User.query.filter_by(username=username).first()
         if not existing_user:
             new_user = User(username, password)
             db.session.add(new_user)
@@ -98,10 +93,11 @@ def logout():
          
 @app.route('/', methods=['POST', 'GET'])
 def index(): 
-    owner = User.query.filter_by(username=session['username']).all()
     if request.method == 'POST': 
         blog_name = request.form['blog']
         new_blog = Blog(blog_name, owner)
+        #owner = User.query.filter_by(username=session['username']).first()
+        users = User.query.all()
         db.session.add(new_blog)
         db.session.commit()
         blogs = Blog.query.filter_by(owner=owner).all()
@@ -111,9 +107,8 @@ def index():
     
 
 
-@app.route('/blog', methods=['GET'])
+@app.route('/blog', methods=['GET', 'POST'])
 def new_blog():
-    page_title = 'New Posts'
     id = request.args.get('id')
     if id == None:
         blogs = Blog.query.all()
@@ -125,31 +120,24 @@ def new_blog():
         individual_blog = Blog.query.get(id)
         return render_template('individual_blog.html', title="Build a Blog", individual_blog=individual_blog)
     
-    
-@app.route('/blog', methods=['POST', 'GET'])
-def display_blog_form():
-    page_title = 'Blogz'
-    blog_title = request.form['title']
-    blog_body = request.form['body']  
-    blog_title_error = ''
-    blog_body_error = ''
-    if blog_title == '':
-        flash('Cannot leave fields empty')
-    if blog_body == '':
-        flash('Cannot leave fields empty')
-    owner = User.query.filter_by(username=session['username']).first()
-    if blog_title_error == "" and blog_body_error == "": 
-        blog = Blog(blog_title, blog_body, owner)
-        db.session.add(blog)
-        db.session.commit()   
-        return redirect('/blog?id=' + str(blog.id))
-    else:
-        return render_template('new_post.html')
-      
+         
 
-@app.route('/new_post', methods=['GET'])
+@app.route('/new_post', methods=['GET', 'POST'])
 def new_post():
-     return render_template('new_post.html')
+    if request.method == 'POST':
+        blog_title = request.form['title']
+        blog_body = request.form['body']  
+        if blog_title == '':
+            flash('Cannot leave fields empty')
+        if blog_body == '':
+            flash('Cannot leave fields empty') 
+            blog = Blog(blog_title, blog_body, owner)
+            db.session.add(blog)
+            db.session.commit()   
+            return redirect('/blog?id=' + str(blog.id + str(owner.id)))
+    elif request.method == 'GET':
+        return render_template('new_post.html', title="Add Blog Entry")
+
 
 @app.route('/individual_blog', methods=['POST', 'GET'])
 def individual_blog():
