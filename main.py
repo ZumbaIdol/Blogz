@@ -96,7 +96,7 @@ def index():
     if request.method == 'POST': 
         blog_name = request.form['blog']
         new_blog = Blog(blog_name, owner)
-        #owner = User.query.filter_by(username=session['username']).first()
+        owner = User.query.filter_by(username=session['username']).first()
         users = User.query.all()
         db.session.add(new_blog)
         db.session.commit()
@@ -108,48 +108,51 @@ def index():
 
 
 @app.route('/blog', methods=['GET', 'POST'])
-def new_blog():
+def blog():
     id = request.args.get('id')
-    if id == None:
-        blogs = Blog.query.all()
-        return render_template("blog.html", blogs=blogs)
     single_user = request.args.get('username')
-    if single_user == 'username':
-        return render_template('singleUser.html', title="Add a New Entry", singleUser=singleUser)
-    else:
+    if id != None:
+        #individual post
         individual_blog = Blog.query.get(id)
-        return render_template('individual_blog.html', title="Build a Blog", individual_blog=individual_blog)
-    
-         
+        return render_template('individual_blog.html', title="Blogs", individual_blog=individual_blog)
+    if single_user != None:
+        #singleuser list
+        user = User.query.filter_by(username=username).all()
+        return render_template('singleUser.html', singleUser=singleUser)
+    #singleUser and blog templates almost indentical
+    blogs = Blog.query.all()
+    return render_template("blog.html", blogs=blogs)
+                       
 
 @app.route('/new_post', methods=['GET', 'POST'])
 def new_post():
     if request.method == 'POST':
         blog_title = request.form['title']
-        blog_body = request.form['body']  
-        if blog_title == '':
+        blog_body = request.form['body'] 
+        owner = User.query.filter_by(username=session['username']).first() 
+        if blog_title == '' or blog_body == '':
             flash('Cannot leave fields empty')
-        if blog_body == '':
-            flash('Cannot leave fields empty') 
-            blog = Blog(blog_title, blog_body, owner)
-            db.session.add(blog)
-            db.session.commit()   
-            return redirect('/blog?id=' + str(blog.id + str(owner.id)))
-    elif request.method == 'GET':
-        return render_template('new_post.html', title="Add Blog Entry")
+            return render_template('new_post.html')
+        blog = Blog(blog_title, blog_body, owner)
+        db.session.add(blog)
+        db.session.commit()   
+        return redirect('/blog?id=' + str(blog.id) + str(owner.id))
+    else:
+        if request.method == 'GET':
+            return render_template('new_post.html', title="Add Blog Entry")
 
 
 @app.route('/individual_blog', methods=['POST', 'GET'])
 def individual_blog():
     if request.method == 'POST':
-        new_blog = request.form['new_blog']
-        add_entry = Blog(new_blog)
+        individual_blog = request.form['individual_blog']
+        add_entry = Blog(individual_blog)
         db.session.add(add_entry)
         db.session.commit()
         flash('Welcome, ' + username)
         return redirect('/blog?id=' + blog.id)
     elif request.method == 'GET':
-        return render_template('new_post.html')
+        return render_template('individual_blog.html')
                
 
 @app.route('/singleUser', methods=['GET'])

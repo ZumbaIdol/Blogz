@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<body bgcolor="#E6E6FA">
+
 
 <center>
-<h1><center>Blog Main Central</center></h1>
-<form action='/' form method='post', value='Blog'>
- 
+<h1>Blog Main Central</h1>
+
     <hr />
     
     {% if blogs|length == 0 %} 
@@ -17,7 +16,7 @@
         {% for blog in blogs %}
             <h2>
                 <left>
-                    <a href="/?blog=blog.id={{blog.id}}">{{blog.title}}</a>
+                    <a href="/?blog={{blog.id}}">{{blog.title}}</a>
                 </left>
             </h2>
             <p>{{blog.body}}</p>
@@ -30,7 +29,7 @@
 
         <hr />
     </center>
-</form>         
+        
         
 {% endblock %}            
         
