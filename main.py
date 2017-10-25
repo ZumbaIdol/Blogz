@@ -47,7 +47,7 @@ def login():
         if user and user.password == password:
             session['username'] = username 
             flash('Logged in') 
-            return redirect('/')
+            return render_template('new_post.html')
         else:
             if user and user.password != password or len(username) < 3 or len(username) > 20 or len(password) < 3 or len(password) > 20 or username == "" or password == "":
                 flash('Incorrect password or no such user exists')
@@ -78,17 +78,16 @@ def signup():
             db.session.commit()
             session['username'] = username
             flash('Signed up')
-            return redirect('/')
+            return render_template('new_post.html')
         else:
             flash('User already exists')
-
     return render_template('signup.html')
 
 
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/')
+    return redirect('/blog')
 
          
 @app.route('/', methods=['POST', 'GET'])
@@ -101,7 +100,7 @@ def index():
         db.session.add(new_blog)
         db.session.commit()
         blogs = Blog.query.filter_by(owner=owner).all()
-        new_blogs = Blog.query.filter_by(new=True, owner=owner)
+        new_post = Blog.query.filter_by(new=True, owner=owner)
 
     return render_template("blog.html")
     
@@ -110,15 +109,15 @@ def index():
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
     id = request.args.get('id')
-    single_user = request.args.get('username')
+    single_user = request.args.get('?user=userId')
     if id != None:
         #individual post
         individual_blog = Blog.query.get(id)
         return render_template('individual_blog.html', title="Blogs", individual_blog=individual_blog)
     if single_user != None:
         #singleuser list
-        user = User.query.filter_by(username=username).all()
-        return render_template('singleUser.html', singleUser=singleUser)
+        username = single_user
+        return render_template('singleUser.html', singleUser=User)
     #singleUser and blog templates almost indentical
     blogs = Blog.query.all()
     return render_template("blog.html", blogs=blogs)
@@ -157,11 +156,11 @@ def individual_blog():
 
 @app.route('/singleUser', methods=['GET'])
 def singleUser():
-    owner_id = request.form['owner_id']
-    add_entry = Blog(new_blog)
+    username= request.form['username']
+    #add_entry = Blog(new_blog)
     db.session.add(add_entry)
     db.session.commit()
-    return redirect('/user?Id=' + user.id)
+    return render_template('singleUser.html')
         
     
 if __name__ == '__main__':

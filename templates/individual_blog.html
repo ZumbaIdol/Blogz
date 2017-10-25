@@ -11,9 +11,9 @@
 <ul>
     {% for individual_blog in individual_blogs %}
             <center>
-                <h2><a href="/blog?id={{individual_blog.id}}">{{individual_blog.title}}</a></h2>
-                    <p>{{individual_blog.body}}</p>
-                    <p>Written by <a href="/blog?user={{username}}">{{username}}</a></p>  
+                <h2><a href="/blog?id={{blog.id}}">{{blog.title}}</a></h2>
+                    <p>{{blog.body}}</p>
+                    <p>Written by <a href="/blog?id={{username}}">{{username}}</a></p>  
         </div>
     {% endfor %} 
 </ul>
