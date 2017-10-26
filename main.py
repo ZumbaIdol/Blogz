@@ -101,22 +101,26 @@ def index():
         db.session.commit()
         blogs = Blog.query.filter_by(owner=owner).all()
         new_post = Blog.query.filter_by(new=True, owner=owner)
-
+        if single_user != None:
+            user = User.query.filter_by(username=username).first()
     return render_template("blog.html")
+    
     
 
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
     id = request.args.get('id')
-    single_user = request.args.get('?user=userId')
+    if request.method == 'GET':
+        users = User.query.all()
+    return render_template('index.html', title="Blogz", users=users)
     if id != None:
         #individual post
         individual_blog = Blog.query.get(id)
         return render_template('individual_blog.html', title="Blogs", individual_blog=individual_blog)
     if single_user != None:
-        #singleuser list
-        username = single_user
+        user = User.query.filter_by(username=username).first()
+        #username = single_user
         return render_template('singleUser.html', singleUser=User)
     #singleUser and blog templates almost indentical
     blogs = Blog.query.all()
@@ -135,7 +139,7 @@ def new_post():
         blog = Blog(blog_title, blog_body, owner)
         db.session.add(blog)
         db.session.commit()   
-        return redirect('/blog?id=' + str(blog.id) + str(owner.id))
+        return redirect('/blog?id=' + blog.id)
     else:
         if request.method == 'GET':
             return render_template('new_post.html', title="Add Blog Entry")
