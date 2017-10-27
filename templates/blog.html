@@ -16,11 +16,14 @@
         {% for blog in blogs %}
             <h2>
                 <left>
-                    <a href="/?blog={{blog.id}}">{{blog.title}}</a>
+                    <a href="/blog?id={{blog.id}}">{{blog.title}}</a>
+                    <br>
+                    
+
                 </left>
             </h2>
             <p>{{blog.body}}</p>
-             
+            <p>By <a href="/blog?user={{blog.owner_id}}">{{blog.owner.username}}</a> </p>
         
         {% endfor %}
     </ul>

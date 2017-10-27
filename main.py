@@ -90,40 +90,39 @@ def logout():
     return redirect('/blog')
 
          
-@app.route('/', methods=['POST', 'GET'])
-def index(): 
-    if request.method == 'POST': 
-        blog_name = request.form['blog']
-        new_blog = Blog(blog_name, owner)
-        owner = User.query.filter_by(username=session['username']).first()
-        users = User.query.all()
-        db.session.add(new_blog)
-        db.session.commit()
-        blogs = Blog.query.filter_by(owner=owner).all()
-        new_post = Blog.query.filter_by(new=True, owner=owner)
-        if single_user != None:
-            user = User.query.filter_by(username=username).first()
-    return render_template("blog.html")
+@app.route('/', methods=['GET'])
+def index():       
+    users = User.query.all()
+    return render_template("index.html", users=users)
     
     
 
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
+    #get user and blog_id from query parameters
     id = request.args.get('id')
-    if request.method == 'GET':
-        users = User.query.all()
-    return render_template('index.html', title="Blogz", users=users)
+    user_id = request.args.get('user')
+
+    #if they gave us a blog id, show just that blog
     if id != None:
+        print("successfully got blog id:", id)
         #individual post
+        # owner = User.query.get('user')
         individual_blog = Blog.query.get(id)
-        return render_template('individual_blog.html', title="Blogs", individual_blog=individual_blog)
-    if single_user != None:
-        user = User.query.filter_by(username=username).first()
-        #username = single_user
-        return render_template('singleUser.html', singleUser=User)
-    #singleUser and blog templates almost indentical
+        print(individual_blog)
+        return render_template('individual_blog.html', individual_blog=individual_blog)
+
+    #if they gave us a user id, show only blogs by that user
+    if user_id != None:
+        print("single user=", user_id)
+        user_blogs = Blog.query.filter_by(owner_id=user_id).all()
+        return render_template('singleUser.html', user_blogs=user_blogs)
+    # #singleUser and blog templates almost indentical
+
+    # if no special parameters, just show all blogs
     blogs = Blog.query.all()
+    print("getting all blogs")
     return render_template("blog.html", blogs=blogs)
                        
 
@@ -139,7 +138,8 @@ def new_post():
         blog = Blog(blog_title, blog_body, owner)
         db.session.add(blog)
         db.session.commit()   
-        return redirect('/blog?id=' + blog.id)
+        return redirect('/blog?id=' + str(blog.id))
+        # return redirect('individual_blog', title=blog_title, body=blog_body)
     else:
         if request.method == 'GET':
             return render_template('new_post.html', title="Add Blog Entry")
@@ -150,10 +150,12 @@ def individual_blog():
     if request.method == 'POST':
         individual_blog = request.form['individual_blog']
         add_entry = Blog(individual_blog)
+        if request.method == 'GET':
+            users = User.query.all()
+        return render_template('index.html', title="Blogz", users=users)
         db.session.add(add_entry)
         db.session.commit()
-        flash('Welcome, ' + username)
-        return redirect('/blog?id=' + blog.id)
+        return redirect('/blog?id=' + str(blog.id))
     elif request.method == 'GET':
         return render_template('individual_blog.html')
                
