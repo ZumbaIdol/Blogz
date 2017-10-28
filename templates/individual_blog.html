@@ -3,21 +3,19 @@
 {% block content %}
 
 <hr>
-    {% if blogs|length == 0 %} 
-        <div align='center'
-            <p>No blogs yet</p> 
-    {% else %}
-
+    
 <ul>
-    {% for individual_blog in individual_blogs %}
-            <center>
-                <h2><a href="/blog?id={{blog.id}}">{{blog.title}}</a></h2>
-                    <p>{{blog.body}}</p>
-                    <p>Written by <a href="/blog?id={{username}}">{{username}}</a></p>  
+              
+                <h2>{{individual_blog.title}}</h2>
+                    <p>{{individual_blog.body}}</p>
+
+
+            <p>Written by <a href="/blog?user={{individual_blog.owner_id}}">{{individual_blog.owner.username}}</a></p>  
+        </center>
         </div>
-    {% endfor %} 
+
 </ul>
-    {% endif %}  
+
 </hr>
 
 {% endblock %}
